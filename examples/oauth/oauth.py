@@ -1,5 +1,6 @@
 from tumblr.oauth import TumblrOAuthClient
 
+
 def main():
     consumer_key = 'API_KEY'
     consumer_secret = 'API_SECRET'
