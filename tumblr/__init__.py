@@ -35,14 +35,24 @@ class TumblrClient(object):
     def get_api_key(self):
         return self.consumer.key
 
-    def build_api_key_url(self, format_string, format_params={},
-        query_params={}):
+    def build_api_key_url(self, format_string, format_params=None,
+        query_params=None):
         """Builds a URL and adds the client's API key"""
+        if format_params is None:
+            format_params = {}
+        if query_params is None:
+            query_params = {}
+
         if 'api_key' not in query_params:
             query_params['api_key'] = self.get_api_key()
         return self.build_url(format_string, format_params, query_params)
 
-    def build_url(self, format_string, format_params={}, query_params={}):
+    def build_url(self, format_string, format_params=None, query_params=None):
+        if format_params is None:
+            format_params = {}
+        if query_params is None:
+            query_params = {}
+
         if 'hostname' not in format_params:
             format_params['hostname'] = self.hostname
         path = format_string % format_params
@@ -95,7 +105,10 @@ class TumblrClient(object):
         request_url = self.build_api_key_url(self.BLOG_URLS['info'])
         return self.make_unauthorized_request(request_url)
 
-    def get_blog_posts(self, post_type=None, request_params={}):
+    def get_blog_posts(self, post_type=None, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         if post_type:
             format_params = {
                 'type': post_type,
@@ -118,37 +131,55 @@ class TumblrClient(object):
         else:
             return self.build_url(self.BLOG_URLS['avatar'])
 
-    def get_blog_followers(self, request_params={}):
+    def get_blog_followers(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_api_key_url(self.BLOG_URLS['followers'],
             query_params=request_params)
 
         return self.make_oauth_request(request_url)
 
-    def get_blog_queue(self, request_params={}):
+    def get_blog_queue(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_api_key_url(self.BLOG_URLS['queue'],
             query_params=request_params)
 
         return self.make_oauth_request(request_url)
 
-    def get_blog_drafts(self, request_params={}):
+    def get_blog_drafts(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_api_key_url(self.BLOG_URLS['draft'],
             query_params=request_params)
 
         return self.make_oauth_request(request_url)
 
-    def get_blog_submissions(self, request_params={}):
+    def get_blog_submissions(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_api_key_url(self.BLOG_URLS['submission'],
             query_params=request_params)
 
         return self.make_oauth_request(request_url)
 
-    def create_post(self, request_params={}):
+    def create_post(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_url(self.BLOG_URLS['post'])
 
         return self.make_oauth_request(request_url, method='POST',
             body=urllib.urlencode(request_params))
 
-    def edit_post(self, post_id, request_params={}):
+    def edit_post(self, post_id, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_url(self.BLOG_URLS['edit'])
 
         if 'id' not in request_params:
@@ -157,7 +188,10 @@ class TumblrClient(object):
         return self.make_oauth_request(request_url, method='POST',
             body=urllib.urlencode(request_params))
 
-    def reblog_post(self, reblog_key, request_params={}):
+    def reblog_post(self, reblog_key, request_params=None):
+        if request_params is None:
+            request_params = {}
+
         request_url = self.build_url(self.BLOG_URLS['edit'])
 
         if 'reblog_key' not in request_params:
