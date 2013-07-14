@@ -1,6 +1,6 @@
 import json
 import logging
-import oauth2 as oauth
+import oauth2
 import urllib
 import urlparse
 
@@ -22,6 +22,7 @@ class TumblrClient(object):
         'draft': '/v2/blog/%(hostname)s/posts/draft',
         'submission': '/v2/blog/%(hostname)s/posts/submission',
         'post': '/v2/blog/%(hostname)s/post',
+        'submit': '/v2/blog/%(hostname)s/post/submit',
         'edit': '/v2/blog/%(hostname)s/post/edit',
         'reblog': '/v2/blog/%(hostname)s/post/reblog',
         'delete': '/v2/blog/%(hostname)s/post/delete',
@@ -85,7 +86,7 @@ class TumblrClient(object):
             logging.error('Missing OAuth credentials')
             return None
 
-        oauth_client = oauth.Client(self.consumer, self.token)
+        oauth_client = oauth2.Client(self.consumer, self.token)
         if body:
             response, content = oauth_client.request(request_url, method,
                 body)
@@ -172,6 +173,15 @@ class TumblrClient(object):
             request_params = {}
 
         request_url = self.build_url(self.BLOG_URLS['post'])
+
+        return self.make_oauth_request(request_url, method='POST',
+            body=urllib.urlencode(request_params))
+
+    def submit_post(self, request_params=None):
+        if request_params is None:
+            request_params = {}
+
+        request_url = self.build_url(self.BLOG_URLS['submit'])
 
         return self.make_oauth_request(request_url, method='POST',
             body=urllib.urlencode(request_params))
